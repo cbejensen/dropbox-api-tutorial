@@ -6,17 +6,35 @@ const dbx = new Dropbox({
   fetch
 })
 
-const getMoreFiles = () =>
-  dbx
-    .filesListFolderContinue({ cursor })
-    .then(res => {
-      updateFiles(res)
-      renderFiles()
-      if (!res.has_more) {
-        getFilesBtn.classList.add('hidden')
-      }
+const init = async () => {
+  try {
+    const dbxRes = await dbx.filesListFolder({
+      path: '/Apps/Expense Organizer Demo',
+      limit: 8
     })
-    .catch(err => console.error(err))
+    updateFiles(dbxRes)
+    renderFiles()
+    dbxManager.classList.remove('hidden')
+    if (dbxRes.has_more) {
+      getFilesBtn.classList.remove('hidden')
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const getMoreFiles = async () => {
+  try {
+    const dbxRes = await dbx.filesListFolderContinue({ cursor })
+    updateFiles(dbxRes)
+    renderFiles()
+    if (!dbxRes.has_more) {
+      getFilesBtn.classList.add('hidden')
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 const updateFiles = dbxRes => {
   files = [...files, ...dbxRes.entries]
@@ -53,17 +71,4 @@ const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
 
 getFilesBtn.addEventListener('click', getMoreFiles)
 
-dbx
-  .filesListFolder({
-    path: '/Apps/Expense Organizer Demo',
-    limit: 8
-  })
-  .then(res => {
-    updateFiles(res)
-    renderFiles()
-    dbxManager.classList.remove('hidden')
-    if (res.has_more) {
-      getFilesBtn.classList.remove('hidden')
-    }
-  })
-  .catch(err => console.error(err))
+init()

@@ -21,9 +21,20 @@ const getMoreFiles = () =>
 const updateFiles = dbxRes => {
   files = [...files, ...dbxRes.entries]
   cursor = dbxRes.cursor
-  let dateRange = ''
-  files.forEach(file => {})
-  dateRangeElem
+  updateDateRange()
+}
+
+const updateDateRange = () => {
+  const sorted = files.sort((a, b) => (a < b ? 0 : 1))
+  const dateFormat = { year: 'numeric', day: 'numeric', month: 'short' }
+  const oldest = new Date(sorted[0].client_modified).toLocaleString(
+    'en-us',
+    dateFormat
+  )
+  const newest = new Date(
+    sorted[sorted.length - 1].client_modified
+  ).toLocaleString('en-us', dateFormat)
+  dateRangeElem.innerHTML = `${oldest} - ${newest}`
 }
 
 const renderFiles = () => {
@@ -38,7 +49,7 @@ let cursor = ''
 const dbxManager = document.querySelector('.js-dbx')
 const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
 const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
-const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range')
+const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
 
 getFilesBtn.addEventListener('click', getMoreFiles)
 

@@ -6,64 +6,46 @@ const dbx = new Dropbox({
   fetch
 })
 
-let state = {
-  file: [],
-  has_more: false,
-  cursor: ''
-}
+let files = []
+let cursor = ''
 
-const filesElem = document.querySelector('.js-files')
+const filesListElem = document.querySelector('.js-files')
 const getFilesBtn = document.querySelector('.js-get-files')
-getFilesBtn.addEventListener('click', e => renderMoreFiles())
+getFilesBtn.addEventListener('click', e => getMoreFiles())
 
-const renderFiles = () => {
-  filesElem.innerHTML = state.files.reduce(
-    (prevFiles, currentFile) => `${prevFiles}<li>${currentFile.name}</li>`,
-    ``
-  )
-}
-
-const renderMoreFiles = () => {
-  if (!state.has_more) {
-    return console.error('Tried to render more files when has_more is false.')
-  }
-  getMoreFiles()
-    .then(() => {
+const getMoreFiles = () =>
+  dbx
+    .filesListFolderContinue({ cursor })
+    .then(res => {
+      updateFiles(res)
       renderFiles()
-      if (!state.has_more) {
+      if (!res.has_more) {
         getFilesBtn.classList.add('hidden')
       }
     })
     .catch(err => console.error(err))
+
+const updateFiles = dbxRes => {
+  files = [...files, ...dbxRes.entries]
+  cursor = dbxRes.cursor
 }
 
-const getMoreFiles = () => {
-  return dbx
-    .filesListFolderContinue({ cursor: state.cursor })
-    .then(res => {
-      state = {
-        ...state,
-        files: [...state.files, ...res.entries],
-        has_more: res.has_more,
-        cursor: res.cursor
-      }
-      return state
-    })
-    .catch(err => err)
+const renderFiles = () => {
+  filesListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
+    return `${prevFiles}<li class="file">${currentFile.name}</li>`
+  }, ``)
 }
 
 dbx
   .filesListFolder({
     path: '/Apps/Expense Organizer Demo',
-    limit: 6
+    limit: 8
   })
   .then(res => {
-    state = {
-      ...state,
-      files: res.entries,
-      has_more: res.has_more,
-      cursor: res.cursor
-    }
+    updateFiles(res)
     renderFiles()
+    if (res.has_more) {
+      getFilesBtn.classList.remove('hidden')
+    }
   })
   .catch(err => console.error(err))

@@ -1,0 +1,32 @@
+.hidden {
+  display: none;
+}
+
+.dbx-list {
+  margin: 0;
+  padding: 10px;
+  background: lightblue;
+}
+.dbx-list-item {
+  list-style: none;
+  border-bottom: 1px solid black;
+  padding: 5px;
+  margin: 5px;
+}
+
+.folder {
+  font-weight: bold;
+}
+.folder:before {
+  /* http://www.amp-what.com/unicode/search/folder */
+  content: '\1f4c1';
+  vertical-align: sub;
+  margin-right: 5px;
+}
+
+.dbx-load-btn {
+  background: black;
+  border: 0;
+  color: white;
+  cursor: pointer;
+}

@@ -6,39 +6,24 @@ const dbx = new Dropbox({
   fetch
 })
 
-const init = async () => {
-  try {
-    const dbxRes = await dbx.filesListFolder({
-      path: '/Apps/Expense Organizer Demo',
-      limit: 8
+const getMoreFiles = () =>
+  dbx
+    .filesListFolderContinue({ cursor })
+    .then(res => {
+      updateFiles(res)
+      renderFiles()
+      if (!res.has_more) {
+        getFilesBtn.classList.add('hidden')
+      }
     })
-    updateFiles(dbxRes)
-    renderFiles()
-    dbxManager.classList.remove('hidden')
-    if (dbxRes.has_more) {
-      getFilesBtn.classList.remove('hidden')
-    }
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-const getMoreFiles = async () => {
-  try {
-    const dbxRes = await dbx.filesListFolderContinue({ cursor })
-    updateFiles(dbxRes)
-    renderFiles()
-    if (!dbxRes.has_more) {
-      getFilesBtn.classList.add('hidden')
-    }
-  } catch (err) {
-    console.error(err)
-  }
-}
+    .catch(err => console.error(err))
 
 const updateFiles = dbxRes => {
   files = [...files, ...dbxRes.entries]
   cursor = dbxRes.cursor
+  let dateRange = ''
+  files.forEach(file => {})
+  dateRangeElem
 }
 
 const renderFiles = () => {
@@ -53,7 +38,21 @@ let cursor = ''
 const dbxManager = document.querySelector('.js-dbx')
 const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
 const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
+const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range')
 
 getFilesBtn.addEventListener('click', getMoreFiles)
 
-init()
+dbx
+  .filesListFolder({
+    path: '/Apps/Expense Organizer Demo',
+    limit: 8
+  })
+  .then(res => {
+    updateFiles(res)
+    renderFiles()
+    dbxManager.classList.remove('hidden')
+    if (res.has_more) {
+      getFilesBtn.classList.remove('hidden')
+    }
+  })
+  .catch(err => console.error(err))

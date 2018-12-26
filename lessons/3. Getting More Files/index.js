@@ -6,6 +6,23 @@ const dbx = new Dropbox({
   fetch
 })
 
+const init = () => {
+  dbx
+    .filesListFolder({
+      path: '/Apps/Expense Organizer Demo',
+      limit: 8
+    })
+    .then(res => {
+      updateFiles(res)
+      renderFiles()
+      dbxManager.classList.remove('hidden')
+      if (res.has_more) {
+        getFilesBtn.classList.remove('hidden')
+      }
+    })
+    .catch(err => console.error(err))
+}
+
 const getMoreFiles = () =>
   dbx
     .filesListFolderContinue({ cursor })
@@ -24,7 +41,7 @@ const updateFiles = dbxRes => {
 }
 
 const renderFiles = () => {
-  filesListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
+  fileListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
     return `${prevFiles}<li class="file">${currentFile.name}</li>`
   }, ``)
 }
@@ -32,20 +49,10 @@ const renderFiles = () => {
 let files = []
 let cursor = ''
 
-const filesListElem = document.querySelector('.js-files')
-const getFilesBtn = document.querySelector('.js-get-files')
+const dbxManager = document.querySelector('.js-dbx')
+const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
+const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
+
 getFilesBtn.addEventListener('click', getMoreFiles)
 
-dbx
-  .filesListFolder({
-    path: '/Apps/Expense Organizer Demo',
-    limit: 8
-  })
-  .then(res => {
-    updateFiles(res)
-    renderFiles()
-    if (res.has_more) {
-      getFilesBtn.classList.remove('hidden')
-    }
-  })
-  .catch(err => console.error(err))
+init()

@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
     "1": "parcel lessons/1.\\ Importing\\ the\\ SDK/index.html",
     "2": "parcel lessons/2.\\ Getting\\ A\\ List\\ of\\ Files/index.html",
-    "3": "parcel lessons/3.\\ Retrieving\\ Metadata\\ for\\ Files/index.html"
+    "3": "parcel lessons/3.\\ Retrieving\\ Metadata\\ for\\ Files/index.html",
+    "4": "parcel lessons/4.\\ Using\\ Async\\ Await/index.html",
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,8 @@
     "dropbox": "^4.0.14"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "babel-preset-env": "^1.7.0",
     "parcel-bundler": "^1.11.0"
   }
 }

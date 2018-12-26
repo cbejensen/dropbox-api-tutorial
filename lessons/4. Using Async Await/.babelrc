@@ -1,0 +1,14 @@
+// getting async await to work with parcel
+// https://github.com/parcel-bundler/parcel/issues/1762
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["last 2 Chrome versions"]
+        }
+      }
+    ]
+  ]
+}

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "1": "parcel lessons/1.\\ Importing\\ the\\ SDK/index.html",
+    "2": "parcel lessons/2.\\ Getting\\ A\\ List\\ of\\ Files/index.html"
   },
   "keywords": [],
   "author": "",

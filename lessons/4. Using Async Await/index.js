@@ -1,5 +1,4 @@
 import { Dropbox } from 'dropbox'
-import { async } from 'q'
 
 const dbx = new Dropbox({
   accessToken:

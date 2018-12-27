@@ -7,7 +7,7 @@ import { Dropbox } from 'dropbox'
 
 const dbx = new Dropbox({
   accessToken:
-    'aeOL1E1HS0AAAAAAAAAAGy2WjtZlAq0zP8WS1HYNvMmP__7ii2-2vMZ-8RXd9fJA',
+    'aeOL1E1HS0AAAAAAAAAALX6z1ogWy75HGE_HBN-NNpJNfhnEa1kjF1vsJ_t7Wf8k',
   fetch
 })
 
@@ -20,7 +20,7 @@ const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
 const init = () => {
   dbx
     .filesListFolder({
-      path: '/Apps/Expense Organizer Demo',
+      path: '',
       limit: 8
     })
     .then(res => {

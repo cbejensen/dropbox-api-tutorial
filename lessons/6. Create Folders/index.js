@@ -2,7 +2,7 @@ import { Dropbox } from 'dropbox'
 
 const dbx = new Dropbox({
   accessToken:
-    'aeOL1E1HS0AAAAAAAAAAGy2WjtZlAq0zP8WS1HYNvMmP__7ii2-2vMZ-8RXd9fJA',
+    'aeOL1E1HS0AAAAAAAAAALX6z1ogWy75HGE_HBN-NNpJNfhnEa1kjF1vsJ_t7Wf8k',
   fetch
 })
 
@@ -15,7 +15,7 @@ const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
 const init = async () => {
   try {
     const res = await dbx.filesListFolder({
-      path: '/Apps/Expense Organizer Demo'
+      path: ''
     })
     updateFiles(res.entries)
     dbxManager.classList.remove('hidden')

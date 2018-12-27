@@ -36,7 +36,9 @@ const getMoreFiles = () =>
     .catch(err => console.error(err))
 
 const updateFiles = dbxRes => {
-  files = [...files, ...dbxRes.entries]
+  // only show files, not folders
+  const dbxResFiles = dbxRes.entries.filter(file => file['.tag'] === 'file')
+  files = [...files, ...dbxResFiles]
   cursor = dbxRes.cursor
 }
 

@@ -9,9 +9,18 @@
 }
 .dbx-list-item {
   list-style: none;
-  border-bottom: 1px solid black;
   padding: 5px;
   margin: 5px;
+}
+.dbx-list-item:not(:last-child) {
+  border-bottom: 1px solid black;
+}
+
+.dbx-load-btn {
+  background: black;
+  border: 0;
+  color: white;
+  cursor: pointer;
 }
 
 .folder {
@@ -22,11 +31,4 @@
   content: '\1f4c1';
   vertical-align: sub;
   margin-right: 5px;
-}
-
-.dbx-load-btn {
-  background: black;
-  border: 0;
-  color: white;
-  cursor: pointer;
 }

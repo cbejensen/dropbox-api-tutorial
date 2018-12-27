@@ -59,7 +59,9 @@ const updateDateRange = () => {
 
 const renderFiles = () => {
   fileListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
-    return `${prevFiles}<li class="file">${currentFile.name}</li>`
+    return `${prevFiles}<li class="dbx-list-item ${currentFile['.tag']}">${
+      currentFile.name
+    }</li>`
   }, ``)
 }
 

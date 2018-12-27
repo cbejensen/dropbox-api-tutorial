@@ -1,3 +1,7 @@
+:root {
+  --blue: #2895f1;
+}
+
 .hidden {
   display: none;
 }
@@ -5,7 +9,8 @@
 .dbx-list {
   margin: 0;
   padding: 10px;
-  background: lightblue;
+  background: var(--blue);
+  color: white;
 }
 .dbx-list-item {
   list-style: none;
@@ -13,14 +18,19 @@
   margin: 5px;
 }
 .dbx-list-item:not(:last-child) {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid white;
 }
 
 .dbx-btn {
-  background: black;
-  border: 0;
-  color: white;
+  background: white;
+  border: 3px solid var(--blue);
+  color: var(--blue);
   cursor: pointer;
+  font-size: 1.2rem;
+}
+.dbx-btn:hover {
+  background: var(--blue);
+  color: white;
 }
 
 .folder {

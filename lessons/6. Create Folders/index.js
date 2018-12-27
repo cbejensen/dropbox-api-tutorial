@@ -1,3 +1,6 @@
+// create folders based on modification dates of files
+// http://dropbox.github.io/dropbox-sdk-js/Dropbox.html#filesCreateFolderV2__anchor
+
 import { Dropbox } from 'dropbox'
 
 const dbx = new Dropbox({
@@ -10,6 +13,7 @@ let files = []
 
 const dbxManager = document.querySelector('.js-dbx')
 const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
+const createFoldersBtn = dbxManager.querySelector('.js-dbx--create-folders-btn')
 const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
 
 const init = async () => {
@@ -23,6 +27,7 @@ const init = async () => {
       const files = await getRestOfFiles(res.cursor)
       console.log(files)
     }
+    createFoldersBtn.addEventListener('click', createFoldersFromDates)
   } catch (err) {
     console.error(err)
   }
@@ -57,16 +62,45 @@ const renderFiles = () => {
 }
 
 const renderDateRange = () => {
-  const sorted = files.sort((a, b) => (a < b ? 0 : 1))
-  const dateFormat = { year: 'numeric', day: 'numeric', month: 'short' }
-  const oldest = new Date(sorted[0].client_modified).toLocaleString(
-    'en-us',
-    dateFormat
+  // folders don't have modified dates, so remove folders
+  // if they exist
+  const sortedFiles = files
+    .filter(item => item.client_modified)
+    .sort((a, b) => {
+      // sort from oldest to newest
+      return a < b ? 0 : 1
+    })
+  const oldest = formatDbxDate(sortedFiles[0].client_modified)
+  const newest = formatDbxDate(
+    sortedFiles[sortedFiles.length - 1].client_modified
   )
-  const newest = new Date(
-    sorted[sorted.length - 1].client_modified
-  ).toLocaleString('en-us', dateFormat)
   dateRangeElem.innerHTML = `${oldest} - ${newest}`
+}
+
+const formatDbxDate = dbxDate => {
+  return new Date(dbxDate).toLocaleString('en-us', {
+    year: 'numeric',
+    day: 'numeric',
+    month: 'short'
+  })
+}
+
+const createFoldersFromDates = () => {
+  const datePaths = []
+  files.forEach(file => {
+    if (!file.client_modified) return
+    const date = new Date(file.client_modified)
+    const path = `/${date.getUTCFullYear()}/${date.getUTCMonth() + 1}`
+    if (datePaths.indexOf(path) === -1) datePaths.push(path)
+  })
+  datePaths.forEach(async path => {
+    try {
+      const metadata = await dbx.filesCreateFolderV2({ path })
+      console.log(metadata)
+    } catch (err) {
+      console.log(err)
+    }
+  })
 }
 
 init()

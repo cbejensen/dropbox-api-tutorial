@@ -16,5 +16,7 @@ Besides retrieving, reading, updating, and moving files and folders via Dropbox,
 - Async/Await
 - Arrow functions
 - Array methods like map, filter, sort, and reduce
-- Spread operator
+- Spread operators
+- For of loops
 - The new `options` argument for `toLocaleString()` (makes rendering readable dates much easier)
+- CSS Variables

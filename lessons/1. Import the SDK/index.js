@@ -1,3 +1,6 @@
+// import the Dropbox JavaScript SDK and initialize
+// using the Dropbox class
+
 import { Dropbox } from 'dropbox'
 // note that Dropbox has to be a named import
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Import_a_single_export_from_a_module

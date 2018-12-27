@@ -1,7 +1,4 @@
-// limit the query to a set number of files,
-// then allow the user to get more files
-
-// to get all files right away, load auto.js instead
+// automatically get all files
 
 import { Dropbox } from 'dropbox'
 
@@ -15,40 +12,36 @@ let files = []
 
 const dbxManager = document.querySelector('.js-dbx')
 const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
-const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
 
 const init = () => {
   dbx
     .filesListFolder({
       path: '/Apps/Expense Organizer Demo',
-      limit: 8
+      limit: 8 // remove this once we verify getting all files works
     })
     .then(res => {
       updateFiles(res.entries)
-      dbxManager.classList.remove('hidden')
       if (res.has_more) {
-        const getMoreFiles = makeFileGetter(res.cursor)
-        getFilesBtn.addEventListener('click', getMoreFiles)
-        getFilesBtn.classList.remove('hidden')
+        getRestOfFiles(res.cursor).then(() => {
+          dbxManager.classList.remove('hidden')
+        })
       }
     })
     .catch(err => console.error(err))
 }
 
-const makeFileGetter = initCursor => {
-  let cursor = initCursor
-  return () =>
-    dbx
-      .filesListFolderContinue({ cursor })
-      .then(res => {
-        updateFiles(res.entries)
-        if (!res.has_more) {
-          getFilesBtn.classList.add('hidden')
-        }
-        cursor = res.cursor
-        return res
-      })
-      .catch(err => console.error(err))
+const getRestOfFiles = cursor => {
+  return dbx
+    .filesListFolderContinue({ cursor })
+    .then(res => {
+      updateFiles(res.entries)
+      if (res.has_more) {
+        return getRestOfFiles(res.cursor).then(files => files)
+      } else {
+        return res.entries
+      }
+    })
+    .catch(err => console.error(err))
 }
 
 const updateFiles = newFiles => {

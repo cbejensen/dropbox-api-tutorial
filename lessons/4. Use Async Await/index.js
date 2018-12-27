@@ -6,41 +6,44 @@ const dbx = new Dropbox({
   fetch
 })
 
+let files = []
+
+const dbxManager = document.querySelector('.js-dbx')
+const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
+
 const init = async () => {
   try {
-    const dbxRes = await dbx.filesListFolder({
-      path: '/Apps/Expense Organizer Demo',
-      limit: 8
+    const res = await dbx.filesListFolder({
+      path: '/Apps/Expense Organizer Demo'
     })
-    updateFiles(dbxRes)
-    renderFiles()
+    updateFiles(res.entries)
     dbxManager.classList.remove('hidden')
-    if (dbxRes.has_more) {
-      getFilesBtn.classList.remove('hidden')
+    if (res.has_more) {
+      const files = await getRestOfFiles(res.cursor)
+      console.log(files)
     }
   } catch (err) {
     console.error(err)
   }
 }
 
-const getMoreFiles = async () => {
+const getRestOfFiles = async cursor => {
   try {
-    const dbxRes = await dbx.filesListFolderContinue({ cursor })
-    updateFiles(dbxRes)
-    renderFiles()
-    if (!dbxRes.has_more) {
-      getFilesBtn.classList.add('hidden')
+    const res = await dbx.filesListFolderContinue({ cursor })
+    updateFiles(res.entries)
+    if (res.has_more) {
+      getRestOfFiles(res.cursor)
     }
   } catch (err) {
     console.error(err)
   }
 }
 
-const updateFiles = dbxRes => {
+const updateFiles = newFiles => {
   // only show files, not folders
-  const dbxResFiles = dbxRes.entries.filter(file => file['.tag'] === 'file')
-  files = [...files, ...dbxResFiles]
-  cursor = dbxRes.cursor
+  const filtered = newFiles.filter(file => file['.tag'] === 'file')
+  files = [...files, ...filtered]
+  renderFiles()
 }
 
 const renderFiles = () => {
@@ -50,14 +53,5 @@ const renderFiles = () => {
     }</li>`
   }, ``)
 }
-
-let files = []
-let cursor = ''
-
-const dbxManager = document.querySelector('.js-dbx')
-const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
-const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
-
-getFilesBtn.addEventListener('click', getMoreFiles)
 
 init()

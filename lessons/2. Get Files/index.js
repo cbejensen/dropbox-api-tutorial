@@ -1,3 +1,5 @@
+// get files from Dropbox and log them in the console
+
 import { Dropbox } from 'dropbox'
 
 const dbx = new Dropbox({

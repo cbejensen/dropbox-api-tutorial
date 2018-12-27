@@ -6,45 +6,57 @@ const dbx = new Dropbox({
   fetch
 })
 
+let files = []
+
+const dbxManager = document.querySelector('.js-dbx')
+const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
+const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
+
 const init = async () => {
   try {
-    const dbxRes = await dbx.filesListFolder({
-      path: '/Apps/Expense Organizer Demo',
-      limit: 8
+    const res = await dbx.filesListFolder({
+      path: '/Apps/Expense Organizer Demo'
     })
-    updateFiles(dbxRes)
-    renderFiles()
+    updateFiles(res.entries)
     dbxManager.classList.remove('hidden')
-    if (dbxRes.has_more) {
-      getFilesBtn.classList.remove('hidden')
+    if (res.has_more) {
+      const files = await getRestOfFiles(res.cursor)
+      console.log(files)
     }
   } catch (err) {
     console.error(err)
   }
 }
 
-const getMoreFiles = async () => {
+const getRestOfFiles = async cursor => {
   try {
-    const dbxRes = await dbx.filesListFolderContinue({ cursor })
-    updateFiles(dbxRes)
-    renderFiles()
-    if (!dbxRes.has_more) {
-      getFilesBtn.classList.add('hidden')
+    const res = await dbx.filesListFolderContinue({ cursor })
+    updateFiles(res.entries)
+    if (res.has_more) {
+      getRestOfFiles(res.cursor)
     }
   } catch (err) {
     console.error(err)
   }
 }
 
-const updateFiles = dbxRes => {
+const updateFiles = newFiles => {
   // only show files, not folders
-  const dbxResFiles = dbxRes.entries.filter(file => file['.tag'] === 'file')
-  files = [...files, ...dbxResFiles]
-  cursor = dbxRes.cursor
-  updateDateRange()
+  const filtered = newFiles.filter(file => file['.tag'] === 'file')
+  files = [...files, ...filtered]
+  renderFiles()
+  renderDateRange()
 }
 
-const updateDateRange = () => {
+const renderFiles = () => {
+  fileListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
+    return `${prevFiles}<li class="dbx-list-item ${currentFile['.tag']}">${
+      currentFile.name
+    }</li>`
+  }, ``)
+}
+
+const renderDateRange = () => {
   const sorted = files.sort((a, b) => (a < b ? 0 : 1))
   const dateFormat = { year: 'numeric', day: 'numeric', month: 'short' }
   const oldest = new Date(sorted[0].client_modified).toLocaleString(
@@ -56,23 +68,5 @@ const updateDateRange = () => {
   ).toLocaleString('en-us', dateFormat)
   dateRangeElem.innerHTML = `${oldest} - ${newest}`
 }
-
-const renderFiles = () => {
-  fileListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
-    return `${prevFiles}<li class="dbx-list-item ${currentFile['.tag']}">${
-      currentFile.name
-    }</li>`
-  }, ``)
-}
-
-let files = []
-let cursor = ''
-
-const dbxManager = document.querySelector('.js-dbx')
-const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
-const getFilesBtn = dbxManager.querySelector('.js-dbx--get-files-btn')
-const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
-
-getFilesBtn.addEventListener('click', getMoreFiles)
 
 init()

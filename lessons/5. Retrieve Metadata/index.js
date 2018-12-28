@@ -10,7 +10,7 @@ let files = []
 
 const dbxManager = document.querySelector('.js-dbx')
 const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
-const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
+const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range')
 
 const init = async () => {
   try {
@@ -57,16 +57,29 @@ const renderFiles = () => {
 }
 
 const renderDateRange = () => {
-  const sorted = files.sort((a, b) => (a < b ? 0 : 1))
-  const dateFormat = { year: 'numeric', day: 'numeric', month: 'short' }
-  const oldest = new Date(sorted[0].client_modified).toLocaleString(
-    'en-us',
-    dateFormat
+  // folders don't have modified dates, so remove folders
+  // if they exist
+  const sortedFiles = files
+    .filter(item => (item ? item.client_modified : false))
+    .sort((a, b) => {
+      // sort from oldest to newest
+      return a < b ? 0 : 1
+    })
+  // if there are no files, exit
+  if (!sortedFiles.length) return
+  const oldest = formatDbxDate(sortedFiles[0].client_modified)
+  const newest = formatDbxDate(
+    sortedFiles[sortedFiles.length - 1].client_modified
   )
-  const newest = new Date(
-    sorted[sorted.length - 1].client_modified
-  ).toLocaleString('en-us', dateFormat)
-  dateRangeElem.innerHTML = `${oldest} - ${newest}`
+  dateRangeElem.innerHTML += `${oldest} - ${newest}`
+}
+
+const formatDbxDate = dbxDate => {
+  return new Date(dbxDate).toLocaleString('en-us', {
+    year: 'numeric',
+    day: 'numeric',
+    month: 'short'
+  })
 }
 
 init()

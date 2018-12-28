@@ -14,7 +14,7 @@ let files = []
 const dbxManager = document.querySelector('.js-dbx')
 const fileListElem = dbxManager.querySelector('.js-dbx--file-list')
 const createFoldersBtn = dbxManager.querySelector('.js-dbx--create-folders-btn')
-const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range span')
+const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range')
 
 const init = async () => {
   try {
@@ -54,27 +54,39 @@ const updateFiles = newFiles => {
 }
 
 const renderFiles = () => {
-  fileListElem.innerHTML = files.reduce((prevFiles, currentFile) => {
-    return `${prevFiles}<li class="dbx-list-item ${currentFile['.tag']}">${
-      currentFile.name
-    }</li>`
-  }, ``)
+  let fileList = ''
+  // if no files, show msg
+  if (!files.length) {
+    console.log('no files')
+    fileList = 'No files'
+  } else {
+    console.log(files)
+    fileList = files.reduce((prevFiles, currentFile) => {
+      return `${prevFiles}<li class="dbx-list-item ${currentFile['.tag']}">${
+        currentFile.name
+      }</li>`
+    }, ``)
+  }
+  console.log(fileList)
+  fileListElem.innerHTML = fileList
 }
 
 const renderDateRange = () => {
   // folders don't have modified dates, so remove folders
   // if they exist
   const sortedFiles = files
-    .filter(item => item.client_modified)
+    .filter(item => (item ? item.client_modified : false))
     .sort((a, b) => {
       // sort from oldest to newest
       return a < b ? 0 : 1
     })
+  // if there are no files, exit
+  if (!sortedFiles.length) return
   const oldest = formatDbxDate(sortedFiles[0].client_modified)
   const newest = formatDbxDate(
     sortedFiles[sortedFiles.length - 1].client_modified
   )
-  dateRangeElem.innerHTML = `${oldest} - ${newest}`
+  dateRangeElem.innerHTML += `${oldest} - ${newest}`
 }
 
 const formatDbxDate = dbxDate => {

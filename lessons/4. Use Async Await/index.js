@@ -20,7 +20,6 @@ const init = async () => {
     dbxManager.classList.remove('hidden')
     if (res.has_more) {
       const files = await getRestOfFiles(res.cursor)
-      console.log(files)
     }
   } catch (err) {
     console.error(err)

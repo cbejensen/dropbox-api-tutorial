@@ -6,6 +6,16 @@
   display: none;
 }
 
+.loading {
+  font-size: 3rem;
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  color: var(--blue);
+  z-index: -1;
+}
+
 .dbx-list {
   margin: 0;
   padding: 10px;
@@ -27,6 +37,7 @@
   color: var(--blue);
   cursor: pointer;
   font-size: 1.2rem;
+  margin: 5px 0;
 }
 .dbx-btn:hover {
   background: var(--blue);

@@ -21,7 +21,6 @@ const init = async () => {
     dbxManager.classList.remove('hidden')
     if (res.has_more) {
       const files = await getRestOfFiles(res.cursor)
-      console.log(files)
     }
   } catch (err) {
     console.error(err)
@@ -71,7 +70,7 @@ const renderDateRange = () => {
   const newest = formatDbxDate(
     sortedFiles[sortedFiles.length - 1].client_modified
   )
-  dateRangeElem.innerHTML += `${oldest} - ${newest}`
+  dateRangeElem.innerHTML = `${oldest} - ${newest}`
 }
 
 const formatDbxDate = dbxDate => {

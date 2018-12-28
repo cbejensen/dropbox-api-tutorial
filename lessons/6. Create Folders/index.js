@@ -25,7 +25,6 @@ const init = async () => {
     dbxManager.classList.remove('hidden')
     if (res.has_more) {
       const files = await getRestOfFiles(res.cursor)
-      console.log(files)
     }
     createFoldersBtn.addEventListener('click', createFoldersFromDates)
   } catch (err) {
@@ -48,7 +47,7 @@ const getRestOfFiles = async cursor => {
 const updateFiles = newFiles => {
   // only show files, not folders
   const filtered = newFiles.filter(file => file['.tag'] === 'file')
-  files = [...files, ...newFiles]
+  files = [...files, ...filtered]
   renderFiles()
   renderDateRange()
 }
@@ -57,17 +56,14 @@ const renderFiles = () => {
   let fileList = ''
   // if no files, show msg
   if (!files.length) {
-    console.log('no files')
     fileList = 'No files'
   } else {
-    console.log(files)
     fileList = files.reduce((prevFiles, currentFile) => {
       return `${prevFiles}<li class="dbx-list-item ${currentFile['.tag']}">${
         currentFile.name
       }</li>`
     }, ``)
   }
-  console.log(fileList)
   fileListElem.innerHTML = fileList
 }
 
@@ -86,7 +82,7 @@ const renderDateRange = () => {
   const newest = formatDbxDate(
     sortedFiles[sortedFiles.length - 1].client_modified
   )
-  dateRangeElem.innerHTML += `${oldest} - ${newest}`
+  dateRangeElem.innerHTML = `${oldest} - ${newest}`
 }
 
 const formatDbxDate = dbxDate => {

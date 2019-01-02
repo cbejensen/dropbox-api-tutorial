@@ -19,8 +19,7 @@ const dateRangeElem = dbxManager.querySelector('.js-dbx--date-range')
 const init = async () => {
   try {
     const res = await dbx.filesListFolder({
-      path: '',
-      limit: 8
+      path: ''
     })
     updateFiles(res.entries)
     dbxManager.classList.remove('hidden')

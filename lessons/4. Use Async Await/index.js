@@ -19,7 +19,7 @@ const init = async () => {
     updateFiles(res.entries)
     dbxManager.classList.remove('hidden')
     if (res.has_more) {
-      const files = await getRestOfFiles(res.cursor)
+      await getRestOfFiles(res.cursor)
     }
   } catch (err) {
     console.error(err)
@@ -31,7 +31,7 @@ const getRestOfFiles = async cursor => {
     const res = await dbx.filesListFolderContinue({ cursor })
     updateFiles(res.entries)
     if (res.has_more) {
-      getRestOfFiles(res.cursor)
+      await getRestOfFiles(res.cursor)
     }
   } catch (err) {
     console.error(err)

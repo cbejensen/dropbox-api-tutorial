@@ -10,6 +10,7 @@
     "4": "parcel lessons/4.\\ Use\\ Async\\ Await/index.html",
     "5": "parcel lessons/5.\\ Retrieve\\ Metadata/index.html",
     "6": "parcel lessons/6.\\ Create\\ Folders/index.html",
+    "final": "parcel lessons/final/index.html",
     "start": "parcel index.html",
     "build": "parcel build index.html"
   },

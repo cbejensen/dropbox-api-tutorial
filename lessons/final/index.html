@@ -13,13 +13,8 @@
         File Organizer
         <div>3000</div>
       </h1>
-      <hr class="hr--lg" />
-      <hr class="hr--md" />
-      <hr class="hr--sm" />
-    </header>
-    <div class="js-dbx hidden">
       <form class="root-path-wrap js-root-path__form">
-        <h2><label for="root-path">Root Path</label></h2>
+        <h2><label for="root-path"> Folder Path</label></h2>
         <input
           type="text"
           name="root-path"
@@ -27,18 +22,28 @@
           class="js-root-path__input"
           value="/"
         />
-        <button class="dbx-btn" type="submit">&rarr;</button>
+        <button aria-label="Load path" class="dbx-btn" type="submit">
+          &rarr;
+        </button>
       </form>
+    </header>
+    <main>
+      <hr class="hr--lg" />
+      <hr class="hr--md" />
+      <hr class="hr--sm" />
+      <button type="button" class="dbx-btn js-organize-btn">Organize</button>
+      <hr class="hr--sm" />
+      <hr class="hr--md" />
+      <hr class="hr--lg" />
       <ul class="dbx-list js-file-list"></ul>
       <footer>
-        <button class="dbx-btn js-organize-btn">Organize</button>
         <ul class="log js-log hidden"></ul>
         <div class="date-range">
           <h2>Date Range</h2>
           <div class="js-date-range"></div>
         </div>
       </footer>
-    </div>
+    </main>
     <div class="loading js-loading">Loading...</div>
     <script src="./index.js"></script>
   </body>

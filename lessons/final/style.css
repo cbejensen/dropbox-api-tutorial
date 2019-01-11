@@ -26,13 +26,21 @@ body {
   transition: 2s;
 }
 
-h1 {
+header {
   background: var(--blue);
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+h1 {
   text-align: center;
   padding: 15px;
   color: white;
   font-family: cursive, sans-serif;
-  margin: 0;
+  margin: 0 auto;
 }
 h1 div {
   font-size: 0.5em;
@@ -40,7 +48,6 @@ h1 div {
 
 h2 {
   font-size: 0.8rem;
-  color: gray;
   margin-bottom: 0.5rem;
 }
 
@@ -59,11 +66,8 @@ hr {
 }
 
 .root-path-wrap {
+  margin: 1rem auto;
   text-align: center;
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .root-path-wrap input {
   border: 1px solid black;
@@ -72,7 +76,7 @@ hr {
 }
 
 .dbx-list {
-  margin: 0 auto;
+  margin: auto;
   padding: 10px;
   background: var(--blue);
   color: white;
